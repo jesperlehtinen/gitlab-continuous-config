@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    hostname: gitlab.continuous.local
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://gitlab.continuous.local:8888'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    ports:
+      - '2222:22'
+      - '8888:8888'
+      - '8443:443'
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+      - 'maven-repo:/root/.m2'
+
+  gitlab-ci-runner-1:
+    image: gitlab/gitlab-runner:latest
+    container_name: gitlab-ci-runner-1
+    volumes:
+      - 'gitlab-runner-config:/etc/gitlab-runner'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+  nexus:
+    image: sonatype/nexus:oss
+    container_name: nexus
+    hostname: nexus.continuous.local
+    volumes:
+      - "nexus-data:/sonatype-work"
+    ports:
+      - "8081:8081"
+
+volumes:
+  nexus-data: {}
+  maven-repo: {}
+  gitlab-runner-config: {}
