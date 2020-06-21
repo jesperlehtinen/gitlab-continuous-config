@@ -1,12 +1,10 @@
-registration_token=ddd
-
-docker exec -it gitlab-ci-runner-1 \
+docker exec -it gitlab-runner-1 \
   gitlab-runner register \
     --non-interactive \
-    --registration-token ${registration_token} \
+    --registration-token "_GGx_qEiZQQNYi5YiCLx" \
     --locked=false \
-    --description docker-stable \
-    --url http://gitlab.continuous.local:8080 \
+    --description "gitlab-runner-1" \
+    --url "http://gitlab:8888" \
     --executor docker \
-    --docker-image docker:stable \
+    --docker-image alpine:latest \
     --docker-volumes "/var/run/docker.sock:/var/run/docker.sock"

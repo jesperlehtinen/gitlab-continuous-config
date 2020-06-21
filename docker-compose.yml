@@ -18,13 +18,17 @@ services:
       - '$GITLAB_HOME/logs:/var/log/gitlab'
       - '$GITLAB_HOME/data:/var/opt/gitlab'
       - 'maven-repo:/root/.m2'
+    networks:
+      - continuous-network
 
-  gitlab-ci-runner-1:
-    image: gitlab/gitlab-runner:latest
-    container_name: gitlab-ci-runner-1
+  gitlab-runner-1:
+    image: gitlab/gitlab-runner:alpine
+    container_name: gitlab-runner-1
     volumes:
       - 'gitlab-runner-config:/etc/gitlab-runner'
       - '/var/run/docker.sock:/var/run/docker.sock'
+    networks:
+      - continuous-network
 
   nexus:
     image: sonatype/nexus:oss
@@ -34,6 +38,11 @@ services:
       - "nexus-data:/sonatype-work"
     ports:
       - "8081:8081"
+    networks:
+      - continuous-network
+
+networks: 
+  continuous-network: {}
 
 volumes:
   nexus-data: {}
