@@ -8,11 +8,12 @@ services:
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'http://gitlab.continuous.local:8888'
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
     ports:
       - '2222:22'
-      - '8888:8888'
-      - '8443:443'
+      - '8888:80'
     volumes:
       - '$GITLAB_HOME/config:/etc/gitlab'
       - '$GITLAB_HOME/logs:/var/log/gitlab'
@@ -42,9 +43,9 @@ services:
       - continuous-network
 
 networks: 
-  continuous-network: {}
+  continuous-network:
 
 volumes:
-  nexus-data: {}
-  maven-repo: {}
-  gitlab-runner-config: {}
+  nexus-data:
+  maven-repo:
+  gitlab-runner-config:
